@@ -1,36 +1,21 @@
-# views.py 路由+视图函数
+from flask import Blueprint, request
 
-#蓝图
-from flask import Blueprint
+from app.controllers.cpu import CPUController
+
+
 from .models import *
 
-blue = Blueprint('AA', __name__)
+quota_blue = Blueprint('quota', __name__)
 
-@blue.route('/')
+@quota_blue.route('/')
+@quota_blue.route('/version')
 def index():
-    return "hello"
+    return {
+        'version': 'v1.0.0'
+    }
 
-@blue.route('/add', methods=['POST'])
-def add_todo():
-    return
-    content = request.form.get('content')
-    new_todo = Todo(content=content)
-    db.session.add(new_todo)
-    db.session.commit()
-    return redirect(url_for('index'))
-
-@blue.route('/complete/<int:id>')
-def complete_todo(id):
-    return
-    todo = Todo.query.get(id)
-    todo.completed = True
-    db.session.commit()
-    return redirect(url_for('index'))
-
-@blue.route('/delete/<int:id>')
-def delete_todo(id):
-    return
-    todo = Todo.query.get(id)
-    db.session.delete(todo)
-    db.session.commit()
-    return redirect(url_for('index'))
+@quota_blue.route('/cpu', methods=['POST'])
+def add_cpu():
+    cpu_data = request.get_json()
+    data = CPUController().add_cpu_info(cpu_data)
+    return data

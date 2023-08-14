@@ -1,19 +1,21 @@
 # 模型 数据库
 from .exts import db
 
-# 
+
 class Cpu(db.Model):
     #表名
     __tablename__ = "cpu_motherboard"
     #字段
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cpu_model = db.Column(db.String(32), unique=True, nullable=False)
+    architecture = db.Column(db.String(32), nullable=False)
     cores = db.Column(db.Integer, nullable=False)
     threads = db.Column(db.Integer, nullable=False)
     frequency =  db.Column(db.String(16), nullable=False)
     max_mem_slot = db.Column(db.Integer, nullable=False)
     max_hard_slot = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
+
 
 class Mem(db.Model):
     #表名

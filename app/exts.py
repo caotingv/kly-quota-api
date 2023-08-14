@@ -9,3 +9,4 @@ migrate = Migrate() # 数据迁移
 def init_exts(app):
     db.init_app(app)
     migrate.init_app(db=db,app=app)
+    
