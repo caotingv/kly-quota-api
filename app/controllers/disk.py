@@ -1,19 +1,18 @@
 from flask import jsonify
 from app.exts import db
-from app.models import Cpu
+from app.models import Disk
 
 
-class CPUController:
+class DiskController:
     def __init__(self):
         pass
 
-    def add(self, cpu_data):
+    def add(self, disk_data):
         try:
-            new_cpu = Cpu(**cpu_data)
+            new_disk = Disk(**disk_data)
             with db.session.begin():
-                db.session.add(new_cpu)
-            return jsonify({'message': 'CPU data added successfully'})
+                db.session.add(new_disk)
+            return jsonify({'message': 'disk data added successfully'})
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
-    

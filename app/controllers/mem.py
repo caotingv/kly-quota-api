@@ -1,19 +1,18 @@
 from flask import jsonify
 from app.exts import db
-from app.models import Cpu
+from app.models import Mem
 
 
-class CPUController:
+class MEMController:
     def __init__(self):
         pass
 
-    def add(self, cpu_data):
+    def add(self, mem_data):
         try:
-            new_cpu = Cpu(**cpu_data)
+            new_mem = Mem(**mem_data)
             with db.session.begin():
-                db.session.add(new_cpu)
-            return jsonify({'message': 'CPU data added successfully'})
+                db.session.add(new_mem)
+            return jsonify({'message': 'mem data added successfully'})
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
-    
