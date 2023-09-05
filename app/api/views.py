@@ -1,8 +1,5 @@
+from db.models import *
 from flask import Blueprint
-from .models.disk import Disk
-from .models.memory import Memory
-from .models.motherboard import Motherboard
-
 
 quota_blue = Blueprint('quota', __name__)
 

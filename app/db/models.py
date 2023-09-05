@@ -1,4 +1,4 @@
-from ..exts import db
+from api.exts import db
 
 
 class Motherboard(db.Model):
@@ -16,3 +16,19 @@ class Motherboard(db.Model):
     max_mem = db.Column(db.Integer, nullable=False, comment="最大内存插槽数")
     max_sata_hard = db.Column(db.Integer, nullable=False, comment="最大SATA硬盘插槽数")
     max_nvme_hard = db.Column(db.Integer, nullable=False, comment="最大NVME硬盘插槽数")
+
+class Memory(db.Model):
+
+    __tablename__ = "memory"
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    capacity_gb = db.Column(db.Integer, nullable=False, comment="内存容量,单位GB")
+
+class Disk(db.Model):
+
+    __tablename__ = "disk"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    interface_type = db.Column(db.String(16), nullable=False, comment="接口类型")
+    is_hdd = db.Column(db.Integer, nullable=False, comment="是否是机械硬盘")
+    capacity_gb = db.Column(db.Integer, nullable=False, comment="硬盘容量,单位GB")

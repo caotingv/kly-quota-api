@@ -1,6 +1,6 @@
 from flask import jsonify
-from app.exts import db
-from app.models import Cpu
+from api.exts import db
+
 import json
 def query_server(condition):
     filter_dict = json.dumps(condition)
