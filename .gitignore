@@ -1,5 +1,6 @@
 AUTHORS
 build-stamp
+build/
 ChangeLog
 covhtml/
 dist/
