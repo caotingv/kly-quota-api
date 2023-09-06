@@ -1,4 +1,4 @@
-from db.models import *
+from kly_quota_api.db.models import *
 from flask import Blueprint
 
 quota_blue = Blueprint('quota', __name__)

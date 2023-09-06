@@ -1,11 +1,26 @@
-# 忽略编译产生的文件
+AUTHORS
+build-stamp
+ChangeLog
+covhtml/
+dist/
+.idea/*
+.vscode/*
+*.DS_Store
 *.pyc
+*.egg-info/
+pbr*.egg/
+setuptools*.egg/
+.stestr/
+.tox/
+.venv/
+*.mo
+*.sw?
+*~
+.eggs/
+.ropeproject/
+.hugo_build.lock
 
-# 忽略日志文件
-*.log
-
-# 忽略临时文件夹
-/temp/
-
-# 忽略虚拟环境
-venv/
+# Files created by releasenotes build
+releasenotes/build
+api-ref/build
+.devcontainer/

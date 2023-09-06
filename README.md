@@ -46,5 +46,12 @@ flask db upgrade
 ## 2. 运行项目
 
 ```bash
-python3 app.py
+# 安装
+python3 setup.py install
+
+# 初始化数据
+kly-db-manage import-data
+
+# 运行项目
+kly-quota-api
 ```

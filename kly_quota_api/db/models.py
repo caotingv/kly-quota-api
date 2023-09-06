@@ -1,4 +1,4 @@
-from api.exts import db
+from kly_quota_api.exts import db
 
 
 class Motherboard(db.Model):
