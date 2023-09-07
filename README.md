@@ -3,14 +3,10 @@
 本 README 提供了如何运行该项目。
 
 ## 先决条件
-
-在开始之前，请确保已安装以下内容：
-
-- Python
-- Flask
-- Flask-SQLAlchemy
-- Flask-Migrate
-
+```bash
+# 安装依赖
+pip3 install-r requirements.txt-i https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 ## 运行项目
 
@@ -24,7 +20,7 @@ kly-db-manage db-migrate
 kly-db-manage db-upgrade
 
 # 导入数据
-kly-db-manage import-data
+kly-db-manage db-import
 
 # 运行项目
 kly-quota-api
