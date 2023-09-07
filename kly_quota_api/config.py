@@ -8,5 +8,3 @@ class Config:
     SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{SQL_PASS}@{SQL_IPADDR}:3306/klc_quota?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 关闭对模型更改的跟踪
     SQLALCHEMY_ECHO = True  # 在控制台上显示生成的SQL语句（在开发中很有用）
-
-
