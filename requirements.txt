@@ -4,3 +4,7 @@ Flask_Migrate==4.0.4
 flask_sqlalchemy==3.0.5
 SQLAlchemy==2.0.19
 PyYAML==6.0.1
+pbr==5.8.1
+oslo.config==8.8.0
+oslo.log==4.7.0
+

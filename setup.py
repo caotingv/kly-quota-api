@@ -10,4 +10,6 @@ except ImportError:
 
 setuptools.setup(
     setup_requires=['pbr>=2.0.0'],
-    pbr=True)
+    pbr=True,
+    package_data={'kly_quota_api.db.migration.alembic_migrations': ['*']},
+)

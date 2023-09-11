@@ -1,34 +1,37 @@
-from kly_quota_api.exts import db
+from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy.ext.declarative import declarative_base
 
 
-class Motherboard(db.Model):
+# 创建模型基类
+Base = declarative_base()
 
+# 定义 Motherboard 模型
+class Motherboard(Base):
     __tablename__ = "motherboard"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    manufacturer = db.Column(db.String(64), nullable=False, comment="主板制造商:安擎,国鑫")
-    cpu_model = db.Column(db.String(32), nullable=False, comment="CPU型号")
-    cpu_architecture = db.Column(
-        db.String(32), nullable=False, comment="CPU架构, x86_64, aarch64")
-    cpu_threads = db.Column(db.Integer, nullable=False, comment="CPU线程数")
-    cpu_frequency = db.Column(db.String(16), nullable=False, comment="CPU主频")
-    max_cpu = db.Column(db.Integer, nullable=False, comment="最大CPU插槽数")
-    max_mem = db.Column(db.Integer, nullable=False, comment="最大内存插槽数")
-    max_sata_hard = db.Column(db.Integer, nullable=False, comment="最大SATA硬盘插槽数")
-    max_nvme_hard = db.Column(db.Integer, nullable=False, comment="最大NVME硬盘插槽数")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    manufacturer = Column(String(64), nullable=False, comment="主板制造商:安擎,国鑫")
+    cpu_model = Column(String(32), nullable=False, comment="CPU型号")
+    cpu_architecture = Column(String(32), nullable=False, comment="CPU架构, x86_64, aarch64")
+    cpu_threads = Column(Integer, nullable=False, comment="CPU线程数")
+    cpu_frequency = Column(String(16), nullable=False, comment="CPU主频")
+    max_cpu = Column(Integer, nullable=False, comment="最大CPU插槽数")
+    max_mem = Column(Integer, nullable=False, comment="最大内存插槽数")
+    max_sata_hard = Column(Integer, nullable=False, comment="最大SATA硬盘插槽数")
+    max_nvme_hard = Column(Integer, nullable=False, comment="最大NVME硬盘插槽数")
 
-class Memory(db.Model):
-
+# 定义 Memory 模型
+class Memory(Base):
     __tablename__ = "memory"
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    capacity_gb = db.Column(db.Integer, nullable=False, comment="内存容量,单位GB")
 
-class Disk(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    capacity_gb = Column(Integer, nullable=False, comment="内存容量,单位GB")
 
+# 定义 Disk 模型
+class Disk(Base):
     __tablename__ = "disk"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    interface_type = db.Column(db.String(16), nullable=False, comment="接口类型")
-    is_hdd = db.Column(db.Integer, nullable=False, comment="是否是机械硬盘")
-    capacity_tb = db.Column(db.Float, nullable=False, comment="硬盘容量,单位GB")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    interface_type = Column(String(16), nullable=False, comment="接口类型")
+    is_hdd = Column(Boolean, nullable=False, comment="是否是机械硬盘")
+    capacity_tb = Column(Float, nullable=False, comment="硬盘容量,单位TB")
