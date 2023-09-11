@@ -11,7 +11,7 @@ from kly_quota_api.api.views import quota_blue
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
-PATH_PREFIX = '/v1.0'
+PATH_PREFIX = '/v1'
 
 def create_app():
     app = Flask(__name__)
