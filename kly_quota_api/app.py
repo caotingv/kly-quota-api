@@ -1,10 +1,12 @@
 import sys
+
 from flask import Flask
-from kly_quota_api.common import service
-from kly_quota_api.api.views import quota_blue
 from oslo_config import cfg
 from oslo_db import options
 from oslo_log import log as logging
+
+from kly_quota_api.common import service
+from kly_quota_api.api.views import quota_blue
 
 
 LOG = logging.getLogger(__name__)

@@ -7,10 +7,15 @@ from alembic import util as alembic_u
 from oslo_config import cfg
 from oslo_db import options
 from oslo_log import log
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
+from contextlib import contextmanager
 
 from kly_quota_api.db.models import *
 
 CONF = cfg.CONF
+LOG = log.getLogger(__name__)
 options.set_defaults(CONF)
 
 log.set_defaults()
@@ -73,26 +78,50 @@ def do_revision(config, cmd):
 def do_import_data(config, cmd):
     data_file = CONF.command.data_file
     if not data_file:
-        raise SystemExit(_('You must provide a data file to import'))
-    
-    with open(data_file, 'r') as file:
-        try:
-            yaml_data = yaml.load(file, Loader=yaml.FullLoader)
-            if not isinstance(yaml_data, list):
-                raise ValueError('YAML data is not a list')
+        LOG.error('You must provide a data file to import')
+        raise SystemExit(1)
 
+    try:
+        yaml_data = yaml.safe_load(open(data_file, 'r'))
+        if not isinstance(yaml_data, list):
+            raise ValueError('YAML data is not a list')
+
+        database_url = CONF.database.connection
+
+        with get_session(database_url) as session:
             for item in yaml_data:
-                if 'Motherboard' in item:
-                    pass
-                elif 'Memory' in item:
-                    pass
-                elif 'Disk' in item:
-                    pass
-        except yaml.YAMLError as e:
-            raise SystemExit(f'Error while parsing YAML file: {e}')
-    print(f'Importing data from {data_file}...')
-    print('Data imported successfully!')
+                if 'Motherboard' in item.keys():
+                    session.add(Motherboard(**item['Motherboard']))
+    
+                elif 'Memory' in item.keys():
+                    session.add(Memory(**item['Memory']))
+                
+                elif 'Disk' in item.keys():
+                    session.add(Disk(**item['Disk']))
 
+        LOG.info('Data imported successfully!')
+
+    except yaml.YAMLError as e:
+        LOG.error(f'Error while parsing YAML file: {e}')
+        raise SystemExit(1)
+
+@contextmanager
+def get_session(database_url):
+    engine = create_engine(database_url)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except IntegrityError as e:
+        session.rollback()
+        LOG.warning(f'Error while adding data: {e}')
+    except Exception as e:
+        session.rollback()
+        LOG.error(f'Error during data import: {e}')
+        raise
+    finally:
+        session.close()
 
 def add_command_parsers(subparsers):
     for name in ['current', 'history', 'branches']:
@@ -146,7 +175,7 @@ def main():
                            'kly_quota_api.db.migration:alembic_migrations')
     # attach the kly-quota-api conf to the Alembic conf
     config.kly_quota_api_config = CONF
-    print(CONF.database.connection)
+    
     CONF(project='kly-quota-api')
     CONF.command.func(config, CONF.command.name)
 
