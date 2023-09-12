@@ -19,7 +19,7 @@ kly-db-manage revision --autogenerate -m "init_database"
 kly-db-manage upgrade head
 
 # 导入数据
-kly-db-manage db-import
+kly-db-manage import_data --data-file hardware_data.yml
 
 # 运行项目
 kly-quota-api
