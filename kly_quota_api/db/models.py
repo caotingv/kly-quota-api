@@ -9,7 +9,7 @@ Base = declarative_base()
 class Motherboard(Base):
     __tablename__ = "motherboard"
 
-    uuid = Column(String(128), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     manufacturer = Column(String(64), nullable=False, comment="主板制造商:安擎,国鑫")
     cpu_model = Column(String(32), nullable=False, comment="CPU型号")
     cpu_architecture = Column(String(32), nullable=False, comment="CPU架构, x86_64, aarch64")
@@ -21,7 +21,6 @@ class Motherboard(Base):
     max_nvme_hard = Column(Integer, nullable=False, comment="最大NVME硬盘插槽数")
     scene_weight = Column(Integer, nullable=False, comment="场景权重")
     concurrency_level = Column(Integer, nullable=False, comment="并发等级 0 低并发 1 中并发 2 高并发")
-    cpu_producer = Column(String(32), nullable=False, comment="cpu厂商")
 
 # 定义 Memory 模型
 class Memory(Base):
