@@ -1,10 +1,10 @@
 alembic==1.11.2
 Flask==2.3.2
-Flask_Migrate==4.0.4
 flask_sqlalchemy==3.0.5
 SQLAlchemy==2.0.19
 PyYAML==6.0.1
+PyMySQL==1.1.0
 pbr==5.8.1
 oslo.config==8.8.0
 oslo.log==4.7.0
-
+oslo.db==14.0.0
