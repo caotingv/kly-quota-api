@@ -1,9 +1,9 @@
 import math
 
 from flask import jsonify
-
-from kly_quota_api.db.models import Motherboard
-from kly_quota_api.db import api
+from kly_quota_api.db.api import DatabaseSessionFactory
+from kly_quota_api.db.models import Motherboard, Disk
+from kly_quota_api.db.disk_repo import DiskRepository
 
 CPU_ALLOCATION_RATIO = 3
 
@@ -14,7 +14,7 @@ class Query(object):
         self.bus_info = filter_dict.get('bus')
         self.cli_num = 0
         self.vcpus = 0
-        self.db = api.get_session()
+        self.db = DatabaseSessionFactory().get_session()
 
     def query_scene_weight(self):
         # 教育场景和办公场景都存在时,场景类型以权重最高的为准
@@ -56,8 +56,12 @@ class Query(object):
 
         try:
             # all_scene_motherboard = db.session.query(Motherboard).filter(Motherboard.weight == weight).filter(Motherboard.manufacturer == server_producer).filter(Motherboard.cpu_producer == cpu_producer).all()
-            all_scene_motherboard_sql = self.db.query(Motherboard).filter(
-                Motherboard.scene_weight == weight, Motherboard.cpu_model.startswith(cpu_manufacturer))
+            with self.db as session:
+                all_scene_motherboard_sql = session.query(Motherboard).filter(
+                    Motherboard.scene_weight == weight,
+                    Motherboard.cpu_model.startswith(
+                        cpu_manufacturer))
+
             return all_scene_motherboard_sql
         except Exception as e:
             raise e
@@ -163,3 +167,23 @@ class CPUQuery(Query):
         server_info_list = self.query_cpu_threads_data(
             all_sql_query, reality_concurrency_level)
         return server_info_list
+
+
+class DiskQuery(Query):
+    def __init__(self, request_data):
+        self.db = DatabaseSessionFactory().get_session()
+        self.disk_repo = DiskRepository()
+        self.request_data = request_data
+    
+    def compute_disk_data(self):
+        pass
+
+    def query_disk_data(self, interface_type):
+        with self.db as session:
+            results = self.disk_repo.get_by_interface_type(
+                                        session=session, 
+                                        interface_type=interface_type)
+       
+        return results
+
+    

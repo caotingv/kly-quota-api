@@ -2,7 +2,6 @@ import sys
 
 from flask import Flask
 from oslo_config import cfg
-from oslo_db import options
 from oslo_log import log as logging
 
 from kly_quota_api.common import service
