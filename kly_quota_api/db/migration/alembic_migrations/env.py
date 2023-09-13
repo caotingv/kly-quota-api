@@ -3,7 +3,7 @@ from os.path import abspath, dirname
 
 from alembic import context
 from sqlalchemy import create_engine, pool
-from kly_quota_api.db import models
+from kly_quota_api.db import base_models
 
 sys.path.append(dirname(dirname(abspath(__file__))))
 
@@ -32,7 +32,7 @@ def run_migrations(config, target_metadata):
             context.run_migrations()
 
 # 获取数据库模型的元数据
-target_metadata = models.Base.metadata
+target_metadata = base_models.Base.metadata
 
 # 根据在线/离线模式选择运行迁移
 if context.is_offline_mode():

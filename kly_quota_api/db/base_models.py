@@ -4,7 +4,6 @@ from sqlalchemy import inspect
 # 创建模型基类
 Base = declarative_base()
 
-
 class QuotaBase:
     def to_dict(self):
         """

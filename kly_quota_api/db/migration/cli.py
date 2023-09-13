@@ -90,8 +90,8 @@ def do_import_data(config, cmd):
 
         with get_session(database_url) as session:
             for item in yaml_data:
-                if 'Motherboard' in item.keys():
-                    session.add(Motherboard(**item['Motherboard']))
+                if 'Vendor' in item.keys():
+                    session.add(Vendor(**item['Vendor']))
     
                 elif 'Memory' in item.keys():
                     session.add(Memory(**item['Memory']))
