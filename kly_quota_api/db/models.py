@@ -1,12 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 
+from kly_quota_api.db import base_models
 
-# 创建模型基类
-Base = declarative_base()
 
 # 定义 Motherboard 模型
-class Motherboard(Base):
+class Motherboard(base_models.Base, base_models.QuotaBase):
     __tablename__ = "motherboard"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -23,14 +21,14 @@ class Motherboard(Base):
     concurrency_level = Column(Integer, nullable=False, comment="并发等级 0 低并发 1 中并发 2 高并发")
 
 # 定义 Memory 模型
-class Memory(Base):
+class Memory(base_models.Base, base_models.QuotaBase):
     __tablename__ = "memory"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     capacity_gb = Column(Integer, nullable=False, comment="内存容量,单位GB")
 
 # 定义 Disk 模型
-class Disk(Base):
+class Disk(base_models.Base, base_models.QuotaBase):
     __tablename__ = "disk"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
