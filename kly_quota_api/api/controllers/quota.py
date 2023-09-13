@@ -1,7 +1,7 @@
 import math
 
 from flask import jsonify
-from kly_quota_api.db import api
+from kly_quota_api.db.api import DatabaseSessionFactory
 from kly_quota_api.db import vendor_repo
 from kly_quota_api.db import disk_repo
 from kly_quota_api.db import mem_repo
@@ -19,7 +19,7 @@ class Query(object):
         self.bus_info = filter_dict.get('bus')
         self.vm_num = 0
         self.vcpus = 0
-        self.session = api.get_session()
+        self.db = DatabaseSessionFactory().get_session()
         self.vendor_repo = vendor_repo.VendorRepository()
         self.mem_repo = mem_repo.MemoryRepository()
         self.disk_repo = disk_repo.DiskRepository()
@@ -82,7 +82,8 @@ class CPUQuery(Query):
         # 计算实际并发等级
         if weight_level >= 2:
             return weight_level
-        weight_data = self.vendor_repo.get(self.session, Vendor.concurrency_level == weight_level)
+        with self.db as session:
+            weight_data = self.vendor_repo.get(session, Vendor.concurrency_level == weight_level)
         if weight_data is None or self.vcpus >= weight_data.cpu_threads:
             weight_level += 1
             return self.query_reality_concurrency_level(intel_server_info, weight_level)
@@ -139,7 +140,8 @@ class CPUQuery(Query):
             'scene_weight': scene_weight,
             'cpu_vendor': 'Intel'
         }
-        intel_server_info = self.vendor_repo.get_all(self.session, **filters)
+        with self.db as session:
+            intel_server_info = self.vendor_repo.get_all(session, **filters)
         reality_concurrency_level = self.query_reality_concurrency_level(intel_server_info, weight_level)
         server_info_list = self.query_cpu_threads_data(intel_server_info, reality_concurrency_level)
         return server_info_list
