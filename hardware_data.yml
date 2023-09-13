@@ -1,5 +1,6 @@
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: Intel
     cpu_model: Intel 4210R
     cpu_architecture: x86_64
     cpu_threads: 20
@@ -11,8 +12,9 @@
     scene_weight: 0
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: AMD
     cpu_model: AMD 7352
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -24,8 +26,9 @@
     scene_weight: 0
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: Intel
     cpu_model: Intel 4314
     cpu_architecture: x86_64
     cpu_threads: 32
@@ -37,8 +40,9 @@
     scene_weight: 0
     concurrency_level: 1
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: AMD
     cpu_model: AMD 7352
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -50,8 +54,9 @@
     scene_weight: 0
     concurrency_level: 1
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: Intel
     cpu_model: Intel 6240R
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -63,8 +68,9 @@
     scene_weight: 0
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: AMD
     cpu_model: AMD 7453
     cpu_architecture: x86_64
     cpu_threads: 56
@@ -76,9 +82,10 @@
     scene_weight: 0
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
     cpu_model: Intel 6226R
+    cpu_vendor: Intel
     cpu_architecture: x86_64
     cpu_threads: 32
     cpu_frequency: 2.9 GHz
@@ -89,8 +96,9 @@
     scene_weight: 1
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: AMD
     cpu_model: AMD 7443
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -102,8 +110,9 @@
     scene_weight: 1
     concurrency_level: 0
     
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: Intel
     cpu_model: Intel 6248R
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -115,8 +124,9 @@
     scene_weight: 1
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 安擎
+- Vendor:
+    vendor: 安擎
+    cpu_vendor: AMD
     cpu_model: AMD 7313
     cpu_architecture: x86_64
     cpu_threads: 32
@@ -128,8 +138,9 @@
     scene_weight: 1
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: Intel
     cpu_model: Intel 4210R
     cpu_architecture: x86_64
     cpu_threads: 20
@@ -141,8 +152,9 @@
     scene_weight: 0
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: AMD
     cpu_model: AMD 7402
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -154,8 +166,9 @@
     scene_weight: 0
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: Intel
     cpu_model: Intel 4314
     cpu_architecture: x86_64
     cpu_threads: 32
@@ -167,8 +180,9 @@
     scene_weight: 0
     concurrency_level: 1
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: AMD
     cpu_model: AMD 7352
     cpu_architecture: x86_64
     cpu_threads: 64
@@ -180,8 +194,9 @@
     scene_weight: 0
     concurrency_level: 1
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: Intel
     cpu_model: Intel 6240R
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -193,8 +208,9 @@
     scene_weight: 0
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: AMD
     cpu_model: AMD 7532
     cpu_architecture: x86_64
     cpu_threads: 64
@@ -206,8 +222,9 @@
     scene_weight: 0
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: Intel
     cpu_model: Intel 6226R
     cpu_architecture: x86_64
     cpu_threads: 32
@@ -218,8 +235,10 @@
     max_nvme_hard: 4
     scene_weight: 1
     concurrency_level: 0
-- Motherboard:
-    manufacturer: 国鑫
+
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: AMD
     cpu_model: AMD 7542
     cpu_architecture: x86_64
     cpu_threads: 64
@@ -231,8 +250,9 @@
     scene_weight: 1
     concurrency_level: 0
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: Intel
     cpu_model: Intel 6248R
     cpu_architecture: x86_64
     cpu_threads: 48
@@ -244,8 +264,9 @@
     scene_weight: 1
     concurrency_level: 2
 
-- Motherboard:
-    manufacturer: 国鑫
+- Vendor:
+    vendor: 国鑫
+    cpu_vendor: AMD
     cpu_model: AMD 7542
     cpu_architecture: x86_64
     cpu_threads: 64
