@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 from kly_quota_api.db import base_models
 
 

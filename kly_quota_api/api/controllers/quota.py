@@ -150,16 +150,14 @@ class CPUQuery(Query):
 class DiskQuery(Query):
     def __init__(self, request_data):
         self.db = DatabaseSessionFactory().get_session()
-        self.disk_repo = DiskRepository()
+        self.disk_repo = disk_repo.DiskRepository()
         self.request_data = request_data
     
     def compute_disk_data(self):
-        pass
-
-    def query_disk_data(self, interface_type):
         with self.db as session:
             results = self.disk_repo.get_by_interface_type(
                                         session=session, 
-                                        interface_type=interface_type)
-       
+                                        interface_type='SATA')
+        
         return results
+
