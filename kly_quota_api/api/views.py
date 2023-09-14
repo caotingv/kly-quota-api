@@ -1,6 +1,6 @@
 from flask import Blueprint,request
 from kly_quota_api.db.models import *
-from kly_quota_api.api.controllers.quota import CPUQuery, DiskQuery
+from kly_quota_api.api.controllers.quota import QuotaContrller
 
 quota_blue = Blueprint('quota', __name__)
 PATH_PREFIX = '/v1.0'
@@ -15,10 +15,5 @@ def index():
 @quota_blue.route('/quota', methods=['GET'])
 def get_quota():
     data = request.get_json()
-    return CPUQuery(data).query_server()
+    return QuotaContrller(data).main()
 
-@quota_blue.route('/disk', methods=['GET'])
-def get_disk():
-    data = request.get_json()
-    result = DiskQuery(data).compute_disk_data()
-    return result
