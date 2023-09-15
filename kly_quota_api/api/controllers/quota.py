@@ -163,7 +163,7 @@ class MemoryController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
 
-    def calc_memory_data(self):
+    def calc_memory_info(self):
         pass
 
 
@@ -171,7 +171,7 @@ class DiskController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
     
-    def calc_disk_data(self):
+    def calc_disk_info(self):
         pass
 
 
