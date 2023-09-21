@@ -63,8 +63,8 @@ class BaseQuotaContrller(object):
     def calc_mem_nums(self):
         edu_vm_num, bus_vm_num = self.get_vm_nums_from_request()
         edu_flavor, bus_flavor = self.get_flavor_from_request()
-        edu_mems =  edu_flavor.get('mem', 0) * edu_vm_num - SYSTEM_RESERVED_MEM
-        bus_mems = bus_flavor.get('mem', 0) * bus_vm_num - CEPH_RESERVED_MEM
+        edu_mems =  edu_flavor.get('memory', 0) * edu_vm_num - SYSTEM_RESERVED_MEM
+        bus_mems = bus_flavor.get('memory', 0) * bus_vm_num - CEPH_RESERVED_MEM
 
         return edu_mems + bus_mems
 
@@ -271,26 +271,41 @@ class MemoryController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
         self.mems = self.calc_mem_nums()
-        bus_vm_mems = self.bus_info['number'] * self.bus_info['flavor']['mem']
-        edu_vm_mems = self.edu_info['number'] * self.edu_info['flavor']['mem']
+        bus_vm_mems = self.bus_info['number'] * self.bus_info['flavor']['memory']
+        edu_vm_mems = self.edu_info['number'] * self.edu_info['flavor']['memory']
         self.total_vm_mems = bus_vm_mems + edu_vm_mems
 
     def calc_memory_info(self, disk_num, vendor):
-        server_number = vendor.get['number']
+        server_number = vendor.get('number')
         if self.bus_info['number'] != 0:
             self.total_vm_mems += (SYSTEM_RESERVED_MEM+ CEPH_RESERVED_MEM) * server_number  + OSD_RESERVED_MEM * disk_num
         else:
             self.total_vm_mems += SYSTEM_RESERVED_MEM * server_number
-        ave_server_mem = math.ceil(self.total_vm_mems / server_number / vendor.get('max_mem'))
+        ave_server_mem = math.ceil(self.total_vm_mems / server_number / vendor['vendor'].get('max_mem',0))
         mem_card_size = self._find_nearby_two_power(ave_server_mem)
         mem_card_number = math.ceil(self.total_vm_mems / server_number / mem_card_size)
-        with self.db as session:
-            mem_card_data = self.mem_repo.get(
-                session, Memory.capacity_gb == mem_card_size)
-        mem_info = mem_card_data.to_dict()
-        vendor['mem'] = {'mem_info':mem_info,'number':mem_card_number}
+
+        db = DatabaseSessionFactory().get_session()
+        filters = {
+            'capacity_gb' : mem_card_size
+        }
+
+        with db as session:
+            mem_card_data = self.mem_repo.get(session,  **filters)
+            vendor['mem'] = self._build_mem_data(mem_card_number,mem_card_data)
         return vendor
-            
+
+    def _build_mem_data(self, number,mem_card_data):
+        return{
+            'number': number,
+            'mem_info':{
+                'vendor': mem_card_data.vendor,
+                'mem_frequency': mem_card_data.mem_frequency,
+                'mem_version': mem_card_data.mem_version,
+                'size': mem_card_data.capacity_gb,
+            }
+        }
+
     def _find_nearby_two_power(self,digit):
         if digit <=32:
             return 32
@@ -312,8 +327,8 @@ class QuotaContrller(BaseQuotaContrller):
     def main(self):
         server_info_list = []
         vendor_info = self.vendor_info.calc_vendor_info()
-        # disk_info = self.disk_info.calc_disk_info()
-        disk_num = 0
+        disk_info = self.disk_info.calc_disk_info()
+        disk_num = 2
         for vendor in vendor_info:
             mem_vendor_info = self.memory_info.calc_memory_info(disk_num,vendor)
             server_info_list.append(mem_vendor_info)
