@@ -5,7 +5,7 @@ from kly_quota_api.db.api import DatabaseSessionFactory
 from kly_quota_api.db import vendor_repo
 from kly_quota_api.db import disk_repo
 from kly_quota_api.db import mem_repo
-from kly_quota_api.db.models import Vendor,Memory
+from kly_quota_api.db.models import Vendor, Memory
 
 
 # CPU 超分比
@@ -19,6 +19,7 @@ HIGH_LEVEL = 2
 SYSTEM_RESERVED_MEM = 48
 OSD_RESERVED_MEM = 4
 CEPH_RESERVED_MEM = 6
+
 
 class BaseQuotaContrller(object):
     def __init__(self, request_data) -> None:
@@ -59,11 +60,12 @@ class BaseQuotaContrller(object):
         bus_vcpus = math.ceil(bus_flavor.get('vcpu', 0) * bus_vm_num / 3)
 
         return edu_vcpus + bus_vcpus
-    
+
     def calc_mem_nums(self):
         edu_vm_num, bus_vm_num = self.get_vm_nums_from_request()
         edu_flavor, bus_flavor = self.get_flavor_from_request()
-        edu_mems =  edu_flavor.get('memory', 0) * edu_vm_num - SYSTEM_RESERVED_MEM
+        edu_mems = edu_flavor.get('memory', 0) * \
+            edu_vm_num - SYSTEM_RESERVED_MEM
         bus_mems = bus_flavor.get('memory', 0) * bus_vm_num - CEPH_RESERVED_MEM
 
         return edu_mems + bus_mems
@@ -198,10 +200,12 @@ class DiskController(BaseQuotaContrller):
         disk_info = {}
 
         if bus_vm_num:
-            disk_info['bus'] = self.calc_bus_disk_device(bus_vm_num, bus_flavor)
+            disk_info['bus'] = self.calc_bus_disk_device(
+                bus_vm_num, bus_flavor)
 
         if edu_vm_num:
-            disk_info['edu'] = self.calc_edu_disk_device(edu_vm_num, edu_flavor)
+            disk_info['edu'] = self.calc_edu_disk_device(
+                edu_vm_num, edu_flavor)
 
         return disk_info
 
@@ -219,7 +223,7 @@ class DiskController(BaseQuotaContrller):
 
         return {
             'sata_num':  sata_disk_num,
-            'stat_capacity_gb': sata_capacity_gb,
+            'sata_capacity_gb': sata_capacity_gb,
             'nvme_num':  nvme_disk_num,
             'nvme_capacity_gb': nvme_capacity_gb
         }
@@ -232,7 +236,7 @@ class DiskController(BaseQuotaContrller):
 
         return {
             'sata_num':  0,
-            'stat_capacity_gb': 0,
+            'sata_capacity_gb': 0,
             'nvme_num':  nvme_disk_num,
             'nvme_capacity_gb': nvme_capacity_gb
         }
@@ -271,34 +275,40 @@ class MemoryController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
         self.mems = self.calc_mem_nums()
-        bus_vm_mems = self.bus_info['number'] * self.bus_info['flavor']['memory']
-        edu_vm_mems = self.edu_info['number'] * self.edu_info['flavor']['memory']
+        bus_vm_mems = self.bus_info['number'] * \
+            self.bus_info['flavor']['memory']
+        edu_vm_mems = self.edu_info['number'] * \
+            self.edu_info['flavor']['memory']
         self.total_vm_mems = bus_vm_mems + edu_vm_mems
 
     def calc_memory_info(self, disk_num, vendor):
         server_number = vendor.get('number')
         if self.bus_info['number'] != 0:
-            self.total_vm_mems += (SYSTEM_RESERVED_MEM+ CEPH_RESERVED_MEM) * server_number  + OSD_RESERVED_MEM * disk_num
+            self.total_vm_mems += (SYSTEM_RESERVED_MEM + CEPH_RESERVED_MEM) * \
+                server_number + OSD_RESERVED_MEM * disk_num
         else:
             self.total_vm_mems += SYSTEM_RESERVED_MEM * server_number
-        ave_server_mem = math.ceil(self.total_vm_mems / server_number / vendor['vendor'].get('max_mem',0))
+        ave_server_mem = math.ceil(
+            self.total_vm_mems / server_number / vendor['vendor'].get('max_mem', 0))
         mem_card_size = self._find_nearby_two_power(ave_server_mem)
-        mem_card_number = math.ceil(self.total_vm_mems / server_number / mem_card_size)
+        mem_card_number = math.ceil(
+            self.total_vm_mems / server_number / mem_card_size)
 
         db = DatabaseSessionFactory().get_session()
         filters = {
-            'capacity_gb' : mem_card_size
+            'capacity_gb': mem_card_size
         }
 
         with db as session:
             mem_card_data = self.mem_repo.get(session,  **filters)
-            vendor['mem'] = self._build_mem_data(mem_card_number,mem_card_data)
+            vendor['memory'] = self._build_mem_data(
+                mem_card_number, mem_card_data)
         return vendor
 
-    def _build_mem_data(self, number,mem_card_data):
-        return{
+    def _build_mem_data(self, number, mem_card_data):
+        return {
             'number': number,
-            'mem_info':{
+            'mem_info': {
                 'vendor': mem_card_data.vendor,
                 'mem_frequency': mem_card_data.mem_frequency,
                 'mem_version': mem_card_data.mem_version,
@@ -306,8 +316,8 @@ class MemoryController(BaseQuotaContrller):
             }
         }
 
-    def _find_nearby_two_power(self,digit):
-        if digit <=32:
+    def _find_nearby_two_power(self, digit):
+        if digit <= 32:
             return 32
         else:
             digit |= digit >> 1
@@ -317,6 +327,7 @@ class MemoryController(BaseQuotaContrller):
             digit |= digit >> 16
             return digit + 1
 
+
 class QuotaContrller(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
@@ -324,13 +335,42 @@ class QuotaContrller(BaseQuotaContrller):
         self.disk_info = DiskController(request_data)
         self.memory_info = MemoryController(request_data)
 
+    def _calculate_disk_info(self, vendor_num, disk_dvice):
+        num_nvme = disk_dvice.get('nvme_num', 0)
+        num_sata = disk_dvice.get('sata_num', 0)
+        nvme_size = disk_dvice.get('nvme_capacity_gb', 0)
+        sata_size = disk_dvice.get('sata_capacity_gb', 0)
+
+        return {
+            'nvme_num': math.ceil(num_nvme / vendor_num),
+            'nvme_size': nvme_size,
+            'sata_num': math.ceil(num_sata / vendor_num),
+            'sata_size': sata_size,
+        }
+
     def main(self):
         server_info_list = []
-        vendor_info = self.vendor_info.calc_vendor_info()
-        disk_info = self.disk_info.calc_disk_info()
-        disk_num = 2
-        for vendor in vendor_info:
-            mem_vendor_info = self.memory_info.calc_memory_info(disk_num,vendor)
-            server_info_list.append(mem_vendor_info)
+
+        vendor_info_data = self.vendor_info.calc_vendor_info()
+        disk_info_data = self.disk_info.calc_disk_info()
+        disk_num = disk_info_data.get('bus', {}).get('sata_num', 0)
+
+        for vendor in vendor_info_data:
+            vendor_num = vendor.get('number', 0)
+            bus_disk_dvice = disk_info_data.get('bus', {})
+            edu_disk_dvice = disk_info_data.get('edu', {})
+
+            bus_disk_info = self._calculate_disk_info(
+                vendor_num, bus_disk_dvice)
+            edu_disk_info = self._calculate_disk_info(
+                vendor_num, edu_disk_dvice)
+
+            server_info = self.memory_info.calc_memory_info(disk_num, vendor)
+            server_info['disk'] = {
+                'bus_disk': bus_disk_info,
+                'edu_disk': edu_disk_info,
+            }
+
+            server_info_list.append(server_info)
 
         return server_info_list
