@@ -279,13 +279,22 @@
     concurrency_level: 2
 
 - Memory:
+    vendor: SAMSUNG
     capacity_gb: 32
+    mem_frequency: 3200
+    mem_version: DDR4
 
 - Memory:
+    vendor: SAMSUNG
     capacity_gb: 64
+    mem_frequency: 3200
+    mem_version: DDR4
 
 - Memory:
+    vendor: SAMSUNG
     capacity_gb: 128
+    mem_frequency: 3200
+    mem_version: DDR4
 
 - Disk:
     interface_type: SATA

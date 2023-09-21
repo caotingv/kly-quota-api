@@ -25,6 +25,10 @@ class Memory(base_models.Base, base_models.QuotaBase):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     capacity_gb = Column(Integer, nullable=False, comment="内存容量,单位GB")
+    vendor = Column(String(64), nullable=True, comment="内存厂商")
+    mem_frequency = Column(Integer, nullable=False, comment="内存主频")
+    mem_version = Column(String(8), nullable=False, comment="几代内存,DDR4..")
+
 
 # 定义 Disk 模型
 class Disk(base_models.Base, base_models.QuotaBase):
