@@ -275,15 +275,13 @@ class MemoryController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
         self.mems = self.calc_mem_nums()
-        bus_vm_mems = self.bus_info['number'] * \
-            self.bus_info['flavor']['memory']
-        edu_vm_mems = self.edu_info['number'] * \
-            self.edu_info['flavor']['memory']
+        self.edu_vm_mum , self.bus_vm_mum = self.get_vm_nums_from_request()
+        edu_vm_mems, bus_vm_mems = self.get_vm_mems()
         self.total_vm_mems = bus_vm_mems + edu_vm_mems
 
     def calc_memory_info(self, disk_num, vendor):
         server_number = vendor.get('number')
-        if self.bus_info['number'] != 0:
+        if self.bus_vm_mum != 0:
             self.total_vm_mems += (SYSTEM_RESERVED_MEM + CEPH_RESERVED_MEM) * \
                 server_number + OSD_RESERVED_MEM * disk_num
         else:
@@ -304,6 +302,18 @@ class MemoryController(BaseQuotaContrller):
             vendor['memory'] = self._build_mem_data(
                 mem_card_number, mem_card_data)
         return vendor
+    
+    def get_vm_mems(self):
+        edu_vm_mems = 0
+        bus_vm_mems = 0
+        if self.edu_vm_mum != 0:
+            edu_vm_mems =  self.edu_vm_mum * \
+            self.edu_info['flavor']['memory']
+        if self.bus_vm_mum != 0:
+            bus_vm_mems = self.bus_vm_mum * \
+            self.bus_info['flavor']['memory']
+
+        return edu_vm_mems,bus_vm_mems
 
     def _build_mem_data(self, number, mem_card_data):
         return {
