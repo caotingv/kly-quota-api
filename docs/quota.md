@@ -58,37 +58,69 @@ curl --location --request GET 'http://127.0.0.1:5000/v1/quota' \
 {
     "data": [
         {
-            "disk": {
-                "bus_disk": {
-                    "nvme_capacity_gb": 960.0,
-                    "nvme_num": 1,
-                    "sata_capacity_gb": 8000.0,
-                    "sata_num": 1
-                },
-                "edu_disk": {
-                    "nvme_capacity_gb": 3840.0,
-                    "nvme_num": 1,
-                    "sata_capacity_gb": 0,
-                    "sata_num": 0
-                }
-            },
-            "memory": {
-                "mem_info": {
-                    "mem_frequency": 3200,
-                    "mem_version": "DDR4",
-                    "size": 32,
-                    "vendor": "SAMSUNG"
-                },
-                "number": 8
-            },
+            "cpu": "CPU: 2 * Intel 6226RIntel 6226R核 主频 2.9 GHz",
+            "disk": [
+                "HDD: 1 * 8.0TB 3.5 7.2 KR 6 Gb/PM",
+                "SSD: 1 * 0.96TB NVMe PCIe",
+                "SSD: 1 * 3.84TB NVMe PCIe"
+            ],
+            "memory": "内存: 8 * 32GB DDR4 3200",
+            "netcard": [
+                "网卡: 1 * 双口千兆以太网卡"
+            ],
             "number": 17,
-            "vendor": {
-                "cpu_model": "Intel 6226R",
-                "max_mem": 16,
-                "vendor": "安擎"
-            }
+            "power_source": "高效冗余电源",
+            "raid_card": "1 * RAID 0, 1, 10",
+            "vendor": "安擎"
         },
-        ...
+        {
+            "cpu": "CPU: 2 * Intel 6248RIntel 6248R核 主频 3.0 GHz",
+            "disk": [
+                "HDD: 2 * 6.0TB 3.5 7.2 KR 6 Gb/PM",
+                "SSD: 1 * 0.96TB NVMe PCIe",
+                "SSD: 2 * 1.92TB NVMe PCIe"
+            ],
+            "memory": "内存: 13 * 32GB DDR4 3200",
+            "netcard": [
+                "网卡: 1 * 双口千兆以太网卡"
+            ],
+            "number": 12,
+            "power_source": "高效冗余电源",
+            "raid_card": "1 * RAID 0, 1, 10",
+            "vendor": "安擎"
+        },
+        {
+            "cpu": "CPU: 2 * Intel 6226RIntel 6226R核 主频 2.9 GHz",
+            "disk": [
+                "HDD: 1 * 8.0TB 3.5 7.2 KR 6 Gb/PM",
+                "SSD: 1 * 0.96TB NVMe PCIe",
+                "SSD: 1 * 3.84TB NVMe PCIe"
+            ],
+            "memory": "内存: 11 * 32GB DDR4 3200",
+            "netcard": [
+                "网卡: 1 * 双口千兆以太网卡"
+            ],
+            "number": 17,
+            "power_source": "高效冗余电源",
+            "raid_card": "1 * RAID 0, 1, 10",
+            "vendor": "国鑫"
+        },
+        {
+            "cpu": "CPU: 2 * Intel 6248RIntel 6248R核 主频 3.0 GHz",
+            "disk": [
+                "HDD: 2 * 6.0TB 3.5 7.2 KR 6 Gb/PM",
+                "SSD: 1 * 0.96TB NVMe PCIe",
+                "SSD: 2 * 1.92TB NVMe PCIe"
+            ],
+            "memory": "内存: 17 * 32GB DDR4 3200",
+            "netcard": [
+                "网卡: 1 * 双口千兆以太网卡"
+            ],
+            "number": 12,
+            "power_source": "高效冗余电源",
+            "raid_card": "1 * RAID 0, 1, 10",
+            "vendor": "国鑫"
+        }
     ],
     "message": "Request successful."
 }
