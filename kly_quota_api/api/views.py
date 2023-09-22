@@ -1,4 +1,4 @@
-from flask import Blueprint,request
+from flask import Blueprint, request
 from kly_quota_api.db.models import *
 from kly_quota_api.api.controllers.quota import QuotaContrller
 
@@ -14,6 +14,6 @@ def index():
 
 @quota_blue.route('/quota', methods=['GET'])
 def get_quota():
-    data = request.get_json()
-    return QuotaContrller(data).main()
+    request_data = request.get_json()
+    return QuotaContrller(request_data).main()
 

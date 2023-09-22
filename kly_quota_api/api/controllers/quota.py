@@ -130,15 +130,19 @@ class VendorContrller(BaseQuotaContrller):
         """
         if current_level >= 2:
             return current_level
-
-        with self.db as session:
+        
+        db = DatabaseSessionFactory()
+        filters = {
+            'concurrency_level': current_level
+        }
+        with db.get_session() as session:
             level_data = self.vendor_repo.get(
-                session, Vendor.concurrency_level == current_level)
+                session, **filters)
 
-        if level_data is None or self.vcpus >= level_data.cpu_threads:
-            return current_level
-        else:
-            return self.calc_required_concurrency_level(intel_server_info, current_level + 1)
+            if level_data is None or self.vcpus >= level_data.cpu_threads:
+                return current_level
+            else:
+                return self.calc_required_concurrency_level(intel_server_info, current_level + 1)
 
     def query_servers_by_concurrency(self, intel_server_info, target_concurrency):
         """
@@ -193,28 +197,26 @@ class DiskController(BaseQuotaContrller):
         super().__init__(request_data)
         self.sata_capacity, self.nvme_capacity = self.get_disk_capacity()
 
-    def calc_disk_info(self):
+    def calc_disk_info(self, server_num):
         edu_vm_num, bus_vm_num = self.get_vm_nums_from_request()
         edu_flavor, bus_flavor = self.get_flavor_from_request()
 
         disk_info = {}
 
         if bus_vm_num:
-            disk_info['bus'] = self.calc_bus_disk_device(
-                bus_vm_num, bus_flavor)
+            disk_info['bus_disk'] = self.calc_bus_disk_device(bus_vm_num, bus_flavor, server_num) 
 
         if edu_vm_num:
-            disk_info['edu'] = self.calc_edu_disk_device(
-                edu_vm_num, edu_flavor)
-
+            disk_info['edu_disk'] = self.calc_edu_disk_device(edu_vm_num, edu_flavor, server_num)
+        
         return disk_info
 
-    def calc_bus_disk_device(self, vm_num, flavor):
-        sata_disk_num = math.ceil(vm_num / 8)
-        nvme_disk_num = math.ceil(sata_disk_num / 6)
+    def calc_bus_disk_device(self, vm_num, flavor, server_num):
+        sata_disk_num = math.ceil(vm_num / server_num / 8)
+        nvme_disk_num = math.ceil(sata_disk_num / server_num / 6)
 
-        sata_required_storage = vm_num * flavor.get('storage') * 2 / 0.8
-        nvme_required_storage = sata_required_storage / 20
+        sata_required_storage = math.ceil(vm_num / server_num * flavor.get('storage')) * 2 / 0.8
+        nvme_required_storage = math.ceil(sata_required_storage  / server_num / 20)
 
         sata_disk_num, sata_capacity_gb = self.find_closest_greater_capacity(
             sata_required_storage, sata_disk_num, self.sata_capacity)
@@ -228,9 +230,9 @@ class DiskController(BaseQuotaContrller):
             'nvme_capacity_gb': nvme_capacity_gb
         }
 
-    def calc_edu_disk_device(self, vm_num, flavor):
-        nvme_disk_num = math.ceil(vm_num / 20)
-        nvme_required_storage = vm_num * flavor.get('storage') / 0.8
+    def calc_edu_disk_device(self, vm_num, flavor, server_num):
+        nvme_disk_num = math.ceil(vm_num / server_num / 20)
+        nvme_required_storage = (math.ceil(vm_num / server_num) * flavor.get('storage')) / 0.8
         nvme_disk_num, nvme_capacity_gb = self.find_closest_greater_capacity(
             nvme_required_storage, nvme_disk_num, self.nvme_capacity)
 
@@ -240,6 +242,7 @@ class DiskController(BaseQuotaContrller):
             'nvme_num':  nvme_disk_num,
             'nvme_capacity_gb': nvme_capacity_gb
         }
+
 
     def find_closest_greater_capacity(self, storage, disk_num, capacity_list):
         capacity_gb = storage / disk_num
@@ -345,42 +348,20 @@ class QuotaContrller(BaseQuotaContrller):
         self.disk_info = DiskController(request_data)
         self.memory_info = MemoryController(request_data)
 
-    def _calculate_disk_info(self, vendor_num, disk_dvice):
-        num_nvme = disk_dvice.get('nvme_num', 0)
-        num_sata = disk_dvice.get('sata_num', 0)
-        nvme_size = disk_dvice.get('nvme_capacity_gb', 0)
-        sata_size = disk_dvice.get('sata_capacity_gb', 0)
-
-        return {
-            'nvme_num': math.ceil(num_nvme / vendor_num),
-            'nvme_size': nvme_size,
-            'sata_num': math.ceil(num_sata / vendor_num),
-            'sata_size': sata_size,
-        }
-
     def main(self):
         server_info_list = []
-
         vendor_info_data = self.vendor_info.calc_vendor_info()
-        disk_info_data = self.disk_info.calc_disk_info()
-        disk_num = disk_info_data.get('bus', {}).get('sata_num', 0)
 
         for vendor in vendor_info_data:
-            vendor_num = vendor.get('number', 0)
-            bus_disk_dvice = disk_info_data.get('bus', {})
-            edu_disk_dvice = disk_info_data.get('edu', {})
-
-            bus_disk_info = self._calculate_disk_info(
-                vendor_num, bus_disk_dvice)
-            edu_disk_info = self._calculate_disk_info(
-                vendor_num, edu_disk_dvice)
-
+            server_num = vendor.get('number', 0)
+            disk_info = self.disk_info.calc_disk_info(server_num = server_num)
+            disk_num = disk_info.get('bus_disk', {}).get('sata_num', 0)
+        
             server_info = self.memory_info.calc_memory_info(disk_num, vendor)
-            server_info['disk'] = {
-                'bus_disk': bus_disk_info,
-                'edu_disk': edu_disk_info,
-            }
-
+            server_info['disk'] =  disk_info
             server_info_list.append(server_info)
 
-        return server_info_list
+        return {
+            "message": "Request successful.",
+            "data": server_info_list
+        }
