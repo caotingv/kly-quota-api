@@ -10,7 +10,7 @@ GET 'http://127.0.0.1:5000/v1/quota'
 | -------- | ------------------- | -------- | -------- | -------- | -------- |
 | edu      | 教育场景            | body     | false    | dict     |          |
 | bus      | 办公场景            | body     | false    | dict     |          |
-| weight   | 权重                |          | true     | int      |          |
+| weight   | 权重                |          | true     | int      | 0 普教 1轻载高教/日常办公 2 重载高教/重载办公          |
 | number   | 点数                |          | true     | int      |          |
 | flavor   | 类型                |          | true     | dict     |          |
 | vcpu     | 单个虚拟机 CPU 核数 |          | true     | int      |          |
