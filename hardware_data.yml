@@ -300,58 +300,94 @@
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 4
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 6
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 8
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 10
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 12
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 14
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 16
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 18
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: SATA
     is_hdd: 1
     capacity_tb: 20
+    physical_size: 3.5
+    transfer_speed: 6 Gb/PM
+    rotation_speed: 7.2 KR
 
 - Disk:
     interface_type: NVMe
-    is_hdd: 1
+    is_hdd: 0
     capacity_tb: 0.96
+    physical_size: 
+    transfer_speed: 
+    rotation_speed: 
 
 - Disk:
     interface_type: NVMe
-    is_hdd: 1
+    is_hdd: 0
     capacity_tb: 1.92
+    physical_size: 
+    transfer_speed: 
+    rotation_speed: 
 
 - Disk:
     interface_type: NVMe
-    is_hdd: 1
+    is_hdd: 0
     capacity_tb: 3.84
+    physical_size: 
+    transfer_speed: 
+    rotation_speed: 
