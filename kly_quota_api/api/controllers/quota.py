@@ -211,7 +211,7 @@ class DiskController(BaseQuotaContrller):
             ssd_disk_info = self.get_ssd_disk_info(bus_disk)
             disk_info.append(hdd_disk_info)
             disk_info.append(ssd_disk_info)
-            disk_num = self.calculate_total_hdd_disks(bus_disk, server_num)
+            hdd_disk_num = self.calculate_total_hdd_disks(bus_disk, server_num)
 
         if edu_vm_num:
             edu_disk = self.calc_edu_disk_device(
@@ -370,11 +370,10 @@ class QuotaContrller(BaseQuotaContrller):
 
     def _create_server_info(self, vendor):
         server_num = vendor.get('number', 0)
-        disk_info, disk_num = self.disk_controller.calc_disk_info(server_num=server_num)
-        memory_info = self.memory_controller.calc_memory_info(disk_num, vendor)
-        
+        disk_info, hdd_disk_num = self.disk_controller.calc_disk_info(server_num=server_num)
+        memory_info = self.memory_controller.calc_memory_info(hdd_disk_num, vendor)
         netcard = ['网卡: 1 * 双口千兆以太网卡']
-        if disk_num != 0 and server_num > 1:
+        if hdd_disk_num != 0 and server_num > 1:
             netcard.append('1 * 双口万兆光纤网卡（含光模块）')
         
         server_info = {
