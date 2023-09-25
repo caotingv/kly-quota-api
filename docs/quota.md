@@ -58,7 +58,7 @@ curl --location --request GET 'http://127.0.0.1:5000/v1/quota' \
 {
     "data": [
         {
-            "cpu": "CPU: 2 * Intel 6226RIntel 6226R核 主频 2.9 GHz",
+            "cpu": "CPU: 2 * Intel 6226R 32核 主频2.9 GHz",
             "disk": [
                 "HDD: 1 * 8.0TB 3.5 7.2 KR 6 Gb/PM",
                 "SSD: 1 * 0.96TB NVMe PCIe",
@@ -74,7 +74,7 @@ curl --location --request GET 'http://127.0.0.1:5000/v1/quota' \
             "vendor": "安擎"
         },
         {
-            "cpu": "CPU: 2 * Intel 6248RIntel 6248R核 主频 3.0 GHz",
+            "cpu": "CPU: 2 * Intel 6248R 48核 主频3.0 GHz",
             "disk": [
                 "HDD: 2 * 6.0TB 3.5 7.2 KR 6 Gb/PM",
                 "SSD: 1 * 0.96TB NVMe PCIe",
@@ -90,7 +90,7 @@ curl --location --request GET 'http://127.0.0.1:5000/v1/quota' \
             "vendor": "安擎"
         },
         {
-            "cpu": "CPU: 2 * Intel 6226RIntel 6226R核 主频 2.9 GHz",
+            "cpu": "CPU: 2 * Intel 6226R 32核 主频2.9 GHz",
             "disk": [
                 "HDD: 1 * 8.0TB 3.5 7.2 KR 6 Gb/PM",
                 "SSD: 1 * 0.96TB NVMe PCIe",
@@ -106,7 +106,7 @@ curl --location --request GET 'http://127.0.0.1:5000/v1/quota' \
             "vendor": "国鑫"
         },
         {
-            "cpu": "CPU: 2 * Intel 6248RIntel 6248R核 主频 3.0 GHz",
+            "cpu": "CPU: 2 * Intel 6248R 48核 主频3.0 GHz",
             "disk": [
                 "HDD: 2 * 6.0TB 3.5 7.2 KR 6 Gb/PM",
                 "SSD: 1 * 0.96TB NVMe PCIe",

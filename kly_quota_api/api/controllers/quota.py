@@ -87,7 +87,7 @@ class BaseQuotaContrller(object):
         return edu_flavor, bus_flavor
 
 
-class VendorContrller(BaseQuotaContrller):
+class VendorController(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
         self.vcpus = self.calc_vcpu_nums()
@@ -364,34 +364,33 @@ class MemoryController(BaseQuotaContrller):
 class QuotaContrller(BaseQuotaContrller):
     def __init__(self, request_data):
         super().__init__(request_data)
-        self.vendor_info = VendorContrller(request_data)
-        self.disk_info = DiskController(request_data)
-        self.memory_info = MemoryController(request_data)
+        self.vendor_controller = VendorController(request_data)
+        self.disk_controller = DiskController(request_data)
+        self.memory_controller = MemoryController(request_data)
+
+    def _create_server_info(self, vendor):
+        server_num = vendor.get('number', 0)
+        disk_info, disk_num = self.disk_controller.calc_disk_info(server_num=server_num)
+        memory_info = self.memory_controller.calc_memory_info(disk_num, vendor)
+        
+        netcard = ['网卡: 1 * 双口千兆以太网卡']
+        if disk_num != 0 and server_num > 1:
+            netcard.append('1 * 双口万兆光纤网卡（含光模块）')
+        
+        server_info = {
+            'disk': disk_info,
+            'memory': memory_info,
+            'cpu': f'CPU: {vendor["vendor"]["max_cpu"]} * {vendor["vendor"]["cpu_model"]} {vendor["vendor"]["cpu_threads"]}核 主频{vendor["vendor"]["cpu_frequency"]}',
+            'raid_card': '1 * RAID 0, 1, 10',
+            'power_source': '高效冗余电源',
+            'netcard': netcard,
+            'vendor': vendor["vendor"]["vendor"],
+            'number': server_num
+        }
+        return server_info
 
     def main(self):
-        server_info_list = []
-        vendor_info_data = self.vendor_info.calc_vendor_info()
-
-        for vendor in vendor_info_data:
-            server_info = {}
-            server_num = vendor.get('number', 0)
-            disk_info, disk_num = self.disk_info.calc_disk_info(
-                server_num=server_num)
-            memory_info = self.memory_info.calc_memory_info(disk_num, vendor)
-
-            server_info['disk'] = disk_info
-            server_info['memory'] = memory_info
-            server_info['cpu'] = f'CPU: {vendor["vendor"]["max_cpu"]} * {vendor["vendor"]["cpu_model"]}' \
-                f'{vendor["vendor"]["cpu_model"]}核 主频 {vendor["vendor"]["cpu_frequency"]}'
-            server_info['raid_card'] = '1 * RAID 0, 1, 10'
-            server_info['power_source'] = '高效冗余电源'
-            server_info['netcard'] = ['网卡: 1 * 双口千兆以太网卡']
-            if disk_num != 0 and server_num > 1:
-                server_info['netcard'].append('1 * 双口万兆光纤网卡（含光模块）')
-            server_info['vendor'] = vendor["vendor"]["vendor"]
-            server_info['number'] = server_num
-
-            server_info_list.append(server_info)
+        server_info_list = [self._create_server_info(vendor) for vendor in self.vendor_controller.calc_vendor_info()]
 
         return {
             "message": "Request successful.",
